@@ -9,6 +9,12 @@ import styles from "./ContentViewer.module.css";
 const ContentViewer = () => {
   const { currentFile } = useCourse();
 
+  console.log("[ContentViewer] currentFile:", {
+    name: currentFile?.name,
+    type: currentFile?.fileType,
+    path: currentFile?.path,
+  });
+
   if (!currentFile) {
     return (
       <div className={styles.empty}>

@@ -11,9 +11,21 @@ const Dashboard = () => {
   const { sidebarOpen } = useUI();
   const navigate = useNavigate();
 
+  // Debug logging
+  useEffect(() => {
+    console.log("[Dashboard] Render state:", {
+      hasCourse: !!course,
+      courseName: course?.name,
+      totalFiles: course?.totalFiles,
+      loading,
+      sidebarOpen,
+    });
+  }, [course, loading, sidebarOpen]);
+
   useEffect(() => {
     // Redirect to home if no course is loaded
     if (!loading && !course) {
+      console.log("[Dashboard] No course loaded, redirecting to home");
       navigate("/");
     }
   }, [course, loading, navigate]);

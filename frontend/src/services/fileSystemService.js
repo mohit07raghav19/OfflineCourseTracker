@@ -40,6 +40,17 @@ export const isSupportedFile = (filename) => {
 };
 
 /**
+ * Check if file should be shown in sidebar (exclude subtitles)
+ */
+export const shouldShowInSidebar = (filename) => {
+  const ext = ("." + filename.split(".").pop()).toLowerCase();
+  // Exclude subtitle files from sidebar
+  return (
+    isSupportedFile(filename) && !SUPPORTED_EXTENSIONS.subtitle.includes(ext)
+  );
+};
+
+/**
  * Recursively scan directory and build file structure
  * Returns tree structure with file handles
  */
@@ -85,8 +96,8 @@ export const scanDirectory = async (dirHandle, path = "") => {
           structure.children.push(subDir);
         }
       } else if (entry.kind === "file") {
-        // Only include supported files
-        if (isSupportedFile(entry.name)) {
+        // Only include supported files (excluding subtitles for sidebar)
+        if (shouldShowInSidebar(entry.name)) {
           const file = await entry.getFile();
           structure.children.push({
             name: entry.name,
