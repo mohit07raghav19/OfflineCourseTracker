@@ -50,6 +50,7 @@ export const UIProvider = ({ children }) => {
     toggleSidebar,
     viewMode,
     setViewMode: changeViewMode,
+    changeViewMode,
     volume,
     setVolume: updateVolume,
     muted,
