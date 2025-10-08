@@ -8,6 +8,7 @@ export const FILE_CATEGORIES = {
   MARKDOWN: "markdown",
   HTML: "html",
   TEXT: "text",
+  IMAGE: "image",
   SUBTITLE: "subtitle",
 };
 

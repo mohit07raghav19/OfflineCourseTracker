@@ -11,6 +11,7 @@ const SUPPORTED_EXTENSIONS = {
   markdown: [".md", ".markdown"],
   html: [".html", ".htm"],
   text: [".txt"],
+  image: [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp", ".svg", ".ico"],
   subtitle: [".srt", ".vtt"],
 };
 

@@ -4,6 +4,7 @@ import PDFViewer from "../PDFViewer/PDFViewer";
 import MarkdownViewer from "../MarkdownViewer/MarkdownViewer";
 import HTMLViewer from "../HTMLViewer/HTMLViewer";
 import TextViewer from "../TextViewer/TextViewer";
+import ImageViewer from "../ImageViewer/ImageViewer";
 import styles from "./ContentViewer.module.css";
 
 const ContentViewer = () => {
@@ -39,6 +40,8 @@ const ContentViewer = () => {
         return <HTMLViewer file={currentFile} />;
       case "text":
         return <TextViewer file={currentFile} />;
+      case "image":
+        return <ImageViewer file={currentFile} />;
       default:
         return (
           <div className={styles.unsupported}>

@@ -1,15 +1,74 @@
+import { useState, useEffect } from "react";
+import { useCourse } from "../../context/CourseContext";
 import styles from "./TextViewer.module.css";
 
 const TextViewer = ({ file }) => {
+  const [content, setContent] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { updateProgress } = useCourse();
+
+  useEffect(() => {
+    const loadTextFile = async () => {
+      if (!file || !file.handle) {
+        setError("No file provided");
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+      setError(null);
+
+      try {
+        const fileHandle = await file.handle.getFile();
+        const text = await fileHandle.text();
+        setContent(text);
+
+        // Mark as complete when loaded
+        updateProgress({
+          completed: true,
+          lastPosition: 0,
+          duration: 1,
+        });
+      } catch (err) {
+        console.error("Error loading text file:", err);
+        setError(err.message || "Failed to load text file");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadTextFile();
+  }, [file, updateProgress]);
+
+  if (loading) {
+    return (
+      <div className={styles.loading}>
+        <div className="spinner" style={{ width: 48, height: 48 }}></div>
+        <p>Loading text file...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.error}>
+        <svg viewBox="0 0 24 24" fill="currentColor" width="48" height="48">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+        </svg>
+        <h3>Error Loading File</h3>
+        <p>{error}</p>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.textViewer}>
-      <div className={styles.placeholder}>
-        <svg viewBox="0 0 24 24" fill="currentColor" width="64" height="64">
-          <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
-        </svg>
-        <h3>Text Viewer</h3>
-        <p>{file.name}</p>
-        <p className={styles.info}>Text viewer coming soon...</p>
+      <div className={styles.header}>
+        <h2 className={styles.fileName}>{file.name}</h2>
+      </div>
+      <div className={styles.content}>
+        <pre className={styles.textContent}>{content}</pre>
       </div>
     </div>
   );

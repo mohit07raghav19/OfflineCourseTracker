@@ -7,6 +7,16 @@ const FILE_EXTENSIONS = {
   [FILE_CATEGORIES.MARKDOWN]: [".md", ".markdown"],
   [FILE_CATEGORIES.HTML]: [".html", ".htm"],
   [FILE_CATEGORIES.TEXT]: [".txt"],
+  [FILE_CATEGORIES.IMAGE]: [
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".gif",
+    ".bmp",
+    ".webp",
+    ".svg",
+    ".ico",
+  ],
   [FILE_CATEGORIES.SUBTITLE]: [".srt", ".vtt"],
 };
 
@@ -51,6 +61,7 @@ export const getFileIcon = (type) => {
     [FILE_CATEGORIES.MARKDOWN]: "markdown",
     [FILE_CATEGORIES.HTML]: "html",
     [FILE_CATEGORIES.TEXT]: "text",
+    [FILE_CATEGORIES.IMAGE]: "image",
   };
 
   return icons[type] || "file";
