@@ -30,45 +30,58 @@ OfflineCourseTracker is a modern, offline-first web application that allows you 
 - **npm** or **yarn**
 - Modern web browser (Chrome, Firefox, Safari, Edge)
 
-### Installation
+### Installation & Running
 
-1. **Clone the repository** (or download the project):
+1. **Clone the repository**:
 
    ```bash
    git clone <repository-url>
    cd OfflineCourseTracker
    ```
 
-2. **Install dependencies**:
+2. **Install dependencies** (first time only):
 
    ```bash
-   # Install backend dependencies
-   cd backend
-   npm install
-
-   # Install frontend dependencies
-   cd ../frontend
-   npm install
+   npm run install:all
    ```
 
-3. **Start the application**:
+3. **Start both servers** (choose one method):
 
-   **Backend** (Port 3001):
+   **Method 1: Using startup script (Recommended)**
+
+   macOS/Linux:
 
    ```bash
-   cd backend
+   ./start-dev.sh
+   ```
+
+   Windows:
+
+   ```cmd
+   start-dev.bat
+   ```
+
+   **Method 2: Using npm**
+
+   ```bash
    npm start
    ```
 
-   **Frontend** (Port 3000):
+   **Method 3: Manual (separate terminals)**
 
    ```bash
-   cd frontend
-   npm start
+   # Terminal 1 - Frontend
+   cd frontend && npm run dev
+
+   # Terminal 2 - Backend
+   cd backend && npm run dev
    ```
 
 4. **Access the application**:
-   Open your browser and navigate to `http://localhost:3000`
+   - Frontend: `http://localhost:5173`
+   - Backend: `http://localhost:3000`
+
+> 💡 **Tip**: See [QUICKSTART.md](QUICKSTART.md) for detailed startup instructions
 
 ---
 
@@ -181,13 +194,13 @@ OfflineCourseTracker/
 
 ### Default Ports
 
-- **Frontend**: 3000
-- **Backend**: 3001
+- **Frontend**: 5173 (Vite dev server)
+- **Backend**: 3000 (Express server)
 
 To change ports, modify the configuration in:
 
-- Frontend: `frontend/.env`
-- Backend: `backend/.env`
+- Frontend: `frontend/vite.config.js`
+- Backend: `backend/src/index.js` or `backend/.env`
 
 ### Course Folder Requirements
 
