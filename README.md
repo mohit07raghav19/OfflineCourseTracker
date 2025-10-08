@@ -24,11 +24,26 @@ OfflineCourseTracker is a modern, offline-first web application that allows you 
 
 ## 🚀 Quick Start
 
-### Prerequisites
+### Choose Your Setup Method
 
-- **Node.js** (v16 or higher)
-- **npm** or **yarn**
-- Modern web browser (Chrome, Firefox, Safari, Edge)
+#### 🐳 Option A: Docker (Recommended - Easiest)
+
+**Prerequisites**: [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+
+```bash
+# Clone and start
+git clone <repository-url>
+cd OfflineCourseTracker
+docker-compose up
+```
+
+Access at: http://localhost:5173
+
+> 📖 **Detailed Docker guide**: See [DOCKER.md](DOCKER.md)
+
+#### 💻 Option B: Local Development
+
+**Prerequisites**: Node.js (v16+), npm/yarn, Modern browser
 
 ### Installation & Running
 
