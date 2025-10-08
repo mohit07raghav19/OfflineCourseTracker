@@ -15,6 +15,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
 .video {
@@ -40,13 +41,18 @@
     rgba(0, 0, 0, 0.9) 100%
   );
   opacity: 0;
-  transition: opacity var(--transition-base);
-  cursor: pointer;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
-.videoContainer:hover .controls,
+.controls.controlsVisible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .controls:focus-within {
   opacity: 1;
+  pointer-events: auto;
 }
 
 .playButton {
@@ -56,11 +62,18 @@
   border-radius: 50%;
   transition: all var(--transition-base);
   backdrop-filter: blur(4px);
+  pointer-events: auto;
 }
 
 .playButton:hover {
   background: rgba(0, 0, 0, 0.8);
   transform: scale(1.1);
+}
+
+/* Hide play button when controls are hidden */
+.controls:not(.controlsVisible) .playButton {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .controlsBar {
@@ -72,6 +85,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
+  pointer-events: auto;
 }
 
 .progressBar {
@@ -126,6 +140,77 @@
   user-select: none;
 }
 
+.volumeControl {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.volumeSlider {
+  width: 80px;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: var(--border-radius-full);
+  outline: none;
+  cursor: pointer;
+}
+
+.volumeSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  background: var(--color-accent-blue);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.volumeSlider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.volumeSlider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: var(--color-accent-blue);
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.volumeSlider::-moz-range-thumb:hover {
+  transform: scale(1.2);
+}
+
+.speedSelect {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.speedSelect:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.speedSelect:focus {
+  outline: 2px solid var(--color-accent-blue);
+  outline-offset: 2px;
+}
+
+.controlsButtons button.active {
+  background: rgba(33, 150, 243, 0.3);
+  color: var(--color-accent-blue);
+}
+
 .loading {
   display: flex;
   flex-direction: column;
@@ -143,19 +228,7 @@
 }
 
 /* View modes */
-.normal {
-  /* Default mode */
-}
-
-.cinema {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1000;
-}
-
+.cinema,
 .fullscreen {
   position: fixed;
   top: 0;
