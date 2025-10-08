@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import * as pdfjsLib from "pdfjs-dist";
 import { useCourse } from "../../context/CourseContext";
+import { useUI } from "../../context/UIContext";
 import styles from "./PDFViewer.module.css";
 
 // Configure PDF.js worker to use local bundled version
@@ -17,9 +18,11 @@ const PDFViewer = ({ file }) => {
   const [scale, setScale] = useState(1.5);
   const [renderedPages, setRenderedPages] = useState([]);
   const [currentPageInView, setCurrentPageInView] = useState(1);
+  const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false);
   const containerRef = useRef(null);
   const pageRefs = useRef({});
   const { updateProgress } = useCourse();
+  const { sidebarOpen } = useUI();
 
   // Load PDF
   useEffect(() => {
@@ -43,12 +46,7 @@ const PDFViewer = ({ file }) => {
         setPdf(pdfDocument);
         setNumPages(pdfDocument.numPages);
 
-        // Mark as complete when loaded
-        updateProgress({
-          completed: true,
-          lastPosition: 0,
-          duration: 1,
-        });
+        // Don't auto-complete - wait for scroll to bottom
       } catch (err) {
         console.error("Error loading PDF:", err);
         setError(err.message || "Failed to load PDF file");
@@ -148,6 +146,32 @@ const PDFViewer = ({ file }) => {
     };
   }, [renderedPages]);
 
+  // Track scroll to bottom for completion
+  useEffect(() => {
+    const containerElement = containerRef.current;
+    if (!containerElement || hasScrolledToBottom || numPages === 0) return;
+
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = containerElement;
+      const scrolledToBottom = scrollTop + clientHeight >= scrollHeight - 100; // 100px threshold
+
+      if (scrolledToBottom && !hasScrolledToBottom) {
+        setHasScrolledToBottom(true);
+        updateProgress({
+          completed: true,
+          lastPosition: numPages,
+          duration: 1,
+        });
+      }
+    };
+
+    containerElement.addEventListener("scroll", handleScroll);
+    // Check initial state
+    handleScroll();
+
+    return () => containerElement.removeEventListener("scroll", handleScroll);
+  }, [hasScrolledToBottom, numPages, updateProgress]);
+
   const zoomIn = () => {
     setScale((prev) => Math.min(3, prev + 0.25));
   };
@@ -183,7 +207,10 @@ const PDFViewer = ({ file }) => {
 
   return (
     <div className={styles.pdfViewer}>
-      <div className={styles.header}>
+      <div
+        className={`${styles.header} ${
+          !sidebarOpen ? styles.headerPadded : ""
+        }`}>
         <h2 className={styles.fileName}>{file.name}</h2>
         <div className={styles.controls}>
           <span className={styles.badge}>PDF</span>

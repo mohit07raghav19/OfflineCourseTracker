@@ -199,6 +199,278 @@
   font-weight: var(--font-semibold);
 }
 
+.recentSection {
+  margin-top: var(--spacing-2xl);
+  padding: var(--spacing-xl);
+  background: var(--color-bg-secondary);
+  border-radius: var(--border-radius-lg);
+}
+
+.recentTitle {
+  font-size: var(--text-xl);
+  font-weight: var(--font-semibold);
+  margin-bottom: var(--spacing-lg);
+  text-align: left;
+}
+
+.recentGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.recentCard {
+  position: relative;
+  padding: var(--spacing-lg);
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+.recentCard:hover {
+  border-color: var(--color-accent-blue);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  background: var(--color-bg-secondary);
+}
+
+.recentCard:active {
+  transform: translateY(0);
+}
+
+.recentCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-md);
+}
+
+.recentIcon {
+  color: var(--color-accent-blue);
+}
+
+.recentRemove {
+  padding: var(--spacing-xs);
+  background: transparent;
+  color: var(--color-text-secondary);
+  border-radius: var(--border-radius-sm);
+  transition: all var(--transition-base);
+  opacity: 0.6;
+}
+
+.recentRemove:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--color-accent-red);
+  opacity: 1;
+}
+
+.recentName {
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  margin-bottom: var(--spacing-xs);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recentFiles {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-md);
+}
+
+.reopenBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--text-xs);
+  color: #fbbf24;
+  font-weight: var(--font-medium);
+  margin-bottom: var(--spacing-md);
+}
+
+.reopenBadge svg {
+  flex-shrink: 0;
+}
+
+.recentProgress {
+  margin-bottom: var(--spacing-md);
+}
+
+.recentProgressBar {
+  width: 100%;
+  height: 6px;
+  background: var(--color-bg-primary);
+  border-radius: var(--border-radius-full);
+  overflow: hidden;
+  margin-bottom: var(--spacing-xs);
+}
+
+.recentProgressFill {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--color-accent-blue),
+    var(--color-accent-green)
+  );
+  transition: width 0.3s ease;
+  border-radius: var(--border-radius-full);
+}
+
+.recentProgressText {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+}
+
+.recentNote {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+.recentSection {
+  margin-top: var(--spacing-2xl);
+  padding: var(--spacing-xl);
+  background: var(--color-bg-secondary);
+  border-radius: var(--border-radius-lg);
+}
+
+.recentTitle {
+  font-size: var(--text-xl);
+  font-weight: var(--font-semibold);
+  margin-bottom: var(--spacing-lg);
+  text-align: center;
+}
+
+.recentGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.recentCard {
+  padding: var(--spacing-lg);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+.recentCard:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-accent-blue);
+}
+
+.recentCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-md);
+}
+
+.recentIcon {
+  color: var(--color-accent-blue);
+}
+
+.recentRemove {
+  padding: var(--spacing-xs);
+  background: transparent;
+  color: var(--color-text-secondary);
+  border-radius: var(--border-radius-sm);
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+.recentRemove:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--color-accent-red);
+}
+
+.recentName {
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  margin-bottom: var(--spacing-xs);
+  color: var(--color-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recentFiles {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-md);
+}
+
+.recentProgress {
+  margin-bottom: var(--spacing-sm);
+}
+
+.recentProgressBar {
+  width: 100%;
+  height: 6px;
+  background: var(--color-bg-tertiary);
+  border-radius: var(--border-radius-full);
+  overflow: hidden;
+  margin-bottom: var(--spacing-xs);
+}
+
+.recentProgressFill {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--color-accent-blue),
+    var(--color-accent-green)
+  );
+  transition: width 0.3s ease;
+  border-radius: var(--border-radius-full);
+}
+
+.recentProgressText {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+}
+
+.recentLastAccessed {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  margin-top: var(--spacing-sm);
+  font-style: italic;
+  margin-bottom: 0;
+}
+
+.recentClickHint {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-sm);
+  background: rgba(59, 130, 246, 0.05);
+  border: 1px dashed var(--color-accent-blue);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--text-xs);
+  color: var(--color-accent-blue);
+  font-weight: var(--font-medium);
+  opacity: 0.8;
+  transition: opacity var(--transition-base);
+}
+
+.recentCard:hover .recentClickHint {
+  opacity: 1;
+}
+
+.recentClickHint svg {
+  flex-shrink: 0;
+}
+
 @media (max-width: 768px) {
   .home {
     padding: var(--spacing-lg);
@@ -233,5 +505,9 @@
 
   .instructions {
     padding: var(--spacing-md);
+  }
+
+  .recentGrid {
+    grid-template-columns: 1fr;
   }
 }

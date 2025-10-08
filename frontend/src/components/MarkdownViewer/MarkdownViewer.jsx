@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { marked } from "marked";
 import { useCourse } from "../../context/CourseContext";
+import { useUI } from "../../context/UIContext";
 import styles from "./MarkdownViewer.module.css";
 
 // Configure marked options
@@ -173,7 +174,10 @@ const MarkdownViewer = ({ file }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [imageUrls, setImageUrls] = useState([]);
+  const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false);
+  const contentRef = useRef(null);
   const { updateProgress, course } = useCourse();
+  const { sidebarOpen } = useUI();
 
   useEffect(() => {
     const loadMarkdownFile = async () => {
@@ -206,12 +210,7 @@ const MarkdownViewer = ({ file }) => {
 
         setHtmlContent(html);
 
-        // Mark as complete when loaded
-        updateProgress({
-          completed: true,
-          lastPosition: 0,
-          duration: 1,
-        });
+        // Don't auto-complete - wait for scroll to bottom
       } catch (err) {
         console.error("Error loading markdown file:", err);
         setError(err.message || "Failed to load markdown file");
@@ -229,6 +228,32 @@ const MarkdownViewer = ({ file }) => {
       imageUrls.forEach((url) => URL.revokeObjectURL(url));
     };
   }, [imageUrls]);
+
+  // Track scroll to bottom for completion
+  useEffect(() => {
+    const contentElement = contentRef.current;
+    if (!contentElement || hasScrolledToBottom) return;
+
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = contentElement;
+      const scrolledToBottom = scrollTop + clientHeight >= scrollHeight - 50; // 50px threshold
+
+      if (scrolledToBottom && !hasScrolledToBottom) {
+        setHasScrolledToBottom(true);
+        updateProgress({
+          completed: true,
+          lastPosition: scrollHeight,
+          duration: 1,
+        });
+      }
+    };
+
+    contentElement.addEventListener("scroll", handleScroll);
+    // Check initial state (in case content is short and doesn't need scrolling)
+    handleScroll();
+
+    return () => contentElement.removeEventListener("scroll", handleScroll);
+  }, [hasScrolledToBottom, updateProgress]);
 
   if (loading) {
     return (
@@ -253,11 +278,14 @@ const MarkdownViewer = ({ file }) => {
 
   return (
     <div className={styles.markdownViewer}>
-      <div className={styles.header}>
+      <div
+        className={`${styles.header} ${
+          !sidebarOpen ? styles.headerPadded : ""
+        }`}>
         <h2 className={styles.fileName}>{file.name}</h2>
         <span className={styles.badge}>Markdown</span>
       </div>
-      <div className={styles.content}>
+      <div className={styles.content} ref={contentRef}>
         <div
           className={styles.markdown}
           dangerouslySetInnerHTML={{ __html: htmlContent }}

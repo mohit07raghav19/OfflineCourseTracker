@@ -10,8 +10,15 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem 2rem;
+  padding-right: 180px; /* Space for back button */
   border-bottom: 1px solid var(--border-color);
   background: var(--card-background);
+  transition: padding-left 0.3s ease;
+  position: relative;
+}
+
+.headerPadded {
+  padding-left: 80px; /* Space for floating sidebar toggle button */
 }
 
 .fileName {
@@ -19,12 +26,19 @@
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--text-primary);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 1rem;
 }
 
 .controls {
   display: flex;
   align-items: center;
   gap: 1rem;
+  flex-shrink: 0;
 }
 
 .badge {
@@ -36,6 +50,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  flex-shrink: 0;
 }
 
 .toolbar {

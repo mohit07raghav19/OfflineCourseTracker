@@ -18,6 +18,7 @@ export const CourseProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [fileURLCache, setFileURLCache] = useState(new Map());
+  const [expandedFolders, setExpandedFolders] = useState(new Set());
 
   // Load a course from directory handle (browser-based)
   const loadCourse = useCallback(async (dirHandle) => {
@@ -201,6 +202,38 @@ export const CourseProvider = ({ children }) => {
     setFileURLCache(new Map());
   }, [fileURLCache]);
 
+  // Expand parent folders for a given file path
+  const expandParentFolders = useCallback(
+    (filePath) => {
+      if (!filePath) return;
+
+      const pathParts = filePath.split("/");
+      const newExpanded = new Set(expandedFolders);
+
+      // Add all parent folder paths
+      for (let i = 1; i < pathParts.length; i++) {
+        const folderPath = pathParts.slice(0, i).join("/");
+        newExpanded.add(folderPath);
+      }
+
+      setExpandedFolders(newExpanded);
+    },
+    [expandedFolders]
+  );
+
+  // Toggle folder expansion
+  const toggleFolderExpansion = useCallback((folderPath) => {
+    setExpandedFolders((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(folderPath)) {
+        newSet.delete(folderPath);
+      } else {
+        newSet.add(folderPath);
+      }
+      return newSet;
+    });
+  }, []);
+
   const value = {
     course,
     progress,
@@ -220,6 +253,9 @@ export const CourseProvider = ({ children }) => {
     getOverallProgress,
     getFileURL,
     cleanupFileURLs,
+    expandedFolders,
+    expandParentFolders,
+    toggleFolderExpansion,
   };
 
   return (

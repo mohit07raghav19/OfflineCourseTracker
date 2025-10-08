@@ -9,11 +9,18 @@
 
 .header {
   padding: var(--spacing-lg) var(--spacing-xl);
+  padding-right: 180px; /* Space for back button */
   border-bottom: 1px solid var(--color-border);
   background: var(--color-bg-secondary);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  transition: padding-left 0.3s ease;
+  position: relative;
+}
+
+.headerPadded {
+  padding-left: 80px; /* Space for floating sidebar toggle button */
 }
 
 .fileName {
@@ -21,6 +28,12 @@
   font-weight: var(--font-semibold);
   color: var(--color-text-primary);
   margin: 0;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 1rem;
 }
 
 .badge {
@@ -31,6 +44,7 @@
   font-size: var(--text-xs);
   font-weight: var(--font-semibold);
   text-transform: uppercase;
+  flex-shrink: 0;
 }
 
 .iframe {

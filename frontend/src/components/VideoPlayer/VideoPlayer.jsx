@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useCourse } from "../../context/CourseContext";
-import { useUI } from "../../context/UIContext";
 import styles from "./VideoPlayer.module.css";
 
 const VideoPlayer = ({ file }) => {
@@ -15,23 +14,10 @@ const VideoPlayer = ({ file }) => {
   const [loading, setLoading] = useState(true);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [isCinemaMode, setIsCinemaMode] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const controlsTimeoutRef = useRef(null);
 
   const { getFileURL, updateProgress, goToNext, getFileProgress } = useCourse();
-  const { viewMode, changeViewMode, setSidebarOpen } = useUI();
-
-  // Toggle cinema mode (also controls sidebar)
-  const toggleCinemaMode = useCallback(() => {
-    setIsCinemaMode((prev) => {
-      const newMode = !prev;
-      changeViewMode(newMode ? "cinema" : "normal");
-      // Toggle sidebar along with cinema mode
-      setSidebarOpen(!newMode); // Close sidebar when entering cinema, open when exiting
-      return newMode;
-    });
-  }, [changeViewMode, setSidebarOpen]);
 
   // Toggle fullscreen
   const toggleFullscreen = useCallback(() => {
@@ -186,18 +172,8 @@ const VideoPlayer = ({ file }) => {
           e.preventDefault();
           toggleFullscreen();
           break;
-        case "c":
-          e.preventDefault();
-          toggleCinemaMode();
-          break;
         case "escape":
           e.preventDefault();
-          // Exit cinema mode and restore sidebar
-          if (isCinemaMode) {
-            setIsCinemaMode(false);
-            changeViewMode("normal");
-            setSidebarOpen(true);
-          }
           // Exit fullscreen if active
           if (document.fullscreenElement) {
             document.exitFullscreen();
@@ -226,13 +202,7 @@ const VideoPlayer = ({ file }) => {
 
     window.addEventListener("keydown", handleKeyPress);
     return () => window.removeEventListener("keydown", handleKeyPress);
-  }, [
-    toggleCinemaMode,
-    toggleFullscreen,
-    isCinemaMode,
-    changeViewMode,
-    setSidebarOpen,
-  ]);
+  }, [toggleFullscreen]);
 
   // Handle video loaded
   const handleLoadedMetadata = () => {
@@ -358,9 +328,7 @@ const VideoPlayer = ({ file }) => {
   }
 
   return (
-    <div
-      className={`${styles.videoPlayer} ${styles[viewMode]}`}
-      ref={containerRef}>
+    <div className={styles.videoPlayer} ref={containerRef}>
       <div className={styles.videoContainer} onClick={handleVideoClick}>
         <video
           ref={videoRef}
@@ -489,20 +457,6 @@ const VideoPlayer = ({ file }) => {
                   <option value="1.75">1.75x</option>
                   <option value="2">2x</option>
                 </select>
-
-                {/* Cinema mode button */}
-                <button
-                  onClick={toggleCinemaMode}
-                  title="Cinema Mode (C)"
-                  className={isCinemaMode ? styles.active : ""}>
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    width="24"
-                    height="24">
-                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z" />
-                  </svg>
-                </button>
 
                 {/* Fullscreen button */}
                 <button onClick={toggleFullscreen} title="Fullscreen (F)">

@@ -1,13 +1,16 @@
 import { useState, useEffect, useRef } from "react";
 import { useCourse } from "../../context/CourseContext";
+import { useUI } from "../../context/UIContext";
 import styles from "./HTMLViewer.module.css";
 
 const HTMLViewer = ({ file }) => {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false);
   const iframeRef = useRef(null);
   const { updateProgress } = useCourse();
+  const { sidebarOpen } = useUI();
 
   useEffect(() => {
     const loadHTMLFile = async () => {
@@ -25,12 +28,7 @@ const HTMLViewer = ({ file }) => {
         const html = await fileHandle.text();
         setContent(html);
 
-        // Mark as complete when loaded
-        updateProgress({
-          completed: true,
-          lastPosition: 0,
-          duration: 1,
-        });
+        // Don't auto-complete - wait for scroll to bottom
       } catch (err) {
         console.error("Error loading HTML file:", err);
         setError(err.message || "Failed to load HTML file");
@@ -52,6 +50,55 @@ const HTMLViewer = ({ file }) => {
       iframeDoc.close();
     }
   }, [content]);
+
+  // Track scroll to bottom for completion (monitor iframe's document)
+  useEffect(() => {
+    if (!iframeRef.current || hasScrolledToBottom) return;
+
+    const checkScroll = () => {
+      try {
+        const iframe = iframeRef.current;
+        const iframeDoc =
+          iframe.contentDocument || iframe.contentWindow.document;
+        const iframeWindow = iframe.contentWindow;
+
+        if (!iframeDoc || !iframeWindow) return;
+
+        const scrollTop =
+          iframeWindow.pageYOffset || iframeDoc.documentElement.scrollTop;
+        const scrollHeight = iframeDoc.documentElement.scrollHeight;
+        const clientHeight = iframeWindow.innerHeight;
+
+        const scrolledToBottom = scrollTop + clientHeight >= scrollHeight - 50; // 50px threshold
+
+        if (scrolledToBottom && !hasScrolledToBottom) {
+          setHasScrolledToBottom(true);
+          updateProgress({
+            completed: true,
+            lastPosition: scrollHeight,
+            duration: 1,
+          });
+        }
+      } catch {
+        // Ignore cross-origin errors
+        console.log("Cannot track scroll for cross-origin iframe");
+      }
+    };
+
+    const iframe = iframeRef.current;
+    const iframeWindow = iframe.contentWindow;
+
+    if (iframeWindow) {
+      iframeWindow.addEventListener("scroll", checkScroll);
+      // Check initial state after a short delay to ensure content is loaded
+      const timer = setTimeout(checkScroll, 500);
+
+      return () => {
+        iframeWindow.removeEventListener("scroll", checkScroll);
+        clearTimeout(timer);
+      };
+    }
+  }, [content, hasScrolledToBottom, updateProgress]);
 
   if (loading) {
     return (
@@ -76,7 +123,10 @@ const HTMLViewer = ({ file }) => {
 
   return (
     <div className={styles.htmlViewer}>
-      <div className={styles.header}>
+      <div
+        className={`${styles.header} ${
+          !sidebarOpen ? styles.headerPadded : ""
+        }`}>
         <h2 className={styles.fileName}>{file.name}</h2>
         <span className={styles.badge}>HTML</span>
       </div>

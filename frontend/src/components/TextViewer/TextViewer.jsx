@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useCourse } from "../../context/CourseContext";
+import { useUI } from "../../context/UIContext";
 import styles from "./TextViewer.module.css";
 
 const TextViewer = ({ file }) => {
@@ -7,6 +8,7 @@ const TextViewer = ({ file }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { updateProgress } = useCourse();
+  const { sidebarOpen } = useUI();
 
   useEffect(() => {
     const loadTextFile = async () => {
@@ -64,7 +66,10 @@ const TextViewer = ({ file }) => {
 
   return (
     <div className={styles.textViewer}>
-      <div className={styles.header}>
+      <div
+        className={`${styles.header} ${
+          !sidebarOpen ? styles.headerPadded : ""
+        }`}>
         <h2 className={styles.fileName}>{file.name}</h2>
       </div>
       <div className={styles.content}>

@@ -1,12 +1,19 @@
-import { useState } from "react";
 import { useCourse } from "../../context/CourseContext";
 import { getFileTypeIcon } from "../../utils/fileIcons";
 import styles from "./FileTree.module.css";
 
 const FileTreeNode = ({ node, level = 0 }) => {
-  const { currentFile, setCurrentFile, getFileProgress, toggleCompletion } =
-    useCourse();
-  const [isExpanded, setIsExpanded] = useState(level === 0); // Root expanded by default
+  const {
+    currentFile,
+    setCurrentFile,
+    getFileProgress,
+    toggleCompletion,
+    expandedFolders,
+    toggleFolderExpansion,
+  } = useCourse();
+
+  // Use context state for expansion, default root to expanded
+  const isExpanded = level === 0 ? true : expandedFolders.has(node.path);
 
   const isDirectory = node.type === "directory";
   const isCurrentFile = currentFile?.path === node.path;
@@ -46,7 +53,7 @@ const FileTreeNode = ({ node, level = 0 }) => {
 
   const handleClick = () => {
     if (isDirectory) {
-      setIsExpanded(!isExpanded);
+      toggleFolderExpansion(node.path);
     } else {
       setCurrentFile(node);
     }
@@ -54,7 +61,39 @@ const FileTreeNode = ({ node, level = 0 }) => {
 
   const handleCheckboxClick = (e) => {
     e.stopPropagation(); // Prevent triggering file selection
-    toggleCompletion(node);
+
+    if (isDirectory) {
+      // Toggle all files in folder
+      toggleFolderCompletion(node);
+    } else {
+      // Toggle single file
+      toggleCompletion(node);
+    }
+  };
+
+  const toggleFolderCompletion = (folderNode) => {
+    if (folderNode.type !== "directory" || !folderNode.children) return;
+
+    // Determine if we should mark all as complete or incomplete
+    // If any file is incomplete, mark all as complete; otherwise mark all as incomplete
+    const allCompleted =
+      folderStatus.total > 0 && folderStatus.completed === folderStatus.total;
+
+    const toggleAllFiles = (node) => {
+      if (node.type === "file") {
+        const progress = getFileProgress(node);
+        // Only toggle if needed
+        if (allCompleted && progress?.completed) {
+          toggleCompletion(node);
+        } else if (!allCompleted && !progress?.completed) {
+          toggleCompletion(node);
+        }
+      } else if (node.children) {
+        node.children.forEach(toggleAllFiles);
+      }
+    };
+
+    folderNode.children.forEach(toggleAllFiles);
   };
 
   const handleKeyDown = (e) => {
@@ -101,25 +140,50 @@ const FileTreeNode = ({ node, level = 0 }) => {
 
         <span className={styles.name}>{node.name}</span>
 
-        {/* Folder completion indicator */}
+        {/* Folder completion indicator and checkbox */}
         {isDirectory && folderStatus && folderStatus.total > 0 && (
-          <span
-            className={styles.folderProgress}
-            title={`${folderStatus.completed}/${folderStatus.total} files completed`}>
-            <span className={styles.folderProgressText}>
-              {folderStatus.completed}/{folderStatus.total}
+          <>
+            <span
+              className={styles.folderProgress}
+              title={`${folderStatus.completed}/${folderStatus.total} files completed`}>
+              <span className={styles.folderProgressText}>
+                {folderStatus.completed}/{folderStatus.total}
+              </span>
             </span>
-            {folderCompletionPercentage === 100 && (
-              <svg
-                className={styles.folderCheckmark}
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                width="14"
-                height="14">
-                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-              </svg>
-            )}
-          </span>
+            <button
+              className={`${styles.checkbox} ${
+                folderCompletionPercentage === 100 ? styles.checked : ""
+              }`}
+              onClick={handleCheckboxClick}
+              title={
+                folderCompletionPercentage === 100
+                  ? "Mark all as incomplete"
+                  : "Mark all as complete"
+              }
+              aria-label={
+                folderCompletionPercentage === 100
+                  ? "Mark all as incomplete"
+                  : "Mark all as complete"
+              }>
+              {folderCompletionPercentage === 100 ? (
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  width="18"
+                  height="18">
+                  <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-8.29 13.29a.996.996 0 0 1-1.41 0L5.71 12.7a.996.996 0 1 1 1.41-1.41L10 14.17l6.88-6.88a.996.996 0 1 1 1.41 1.41l-7.58 7.59z" />
+                </svg>
+              ) : (
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  width="18"
+                  height="18">
+                  <path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" />
+                </svg>
+              )}
+            </button>
+          </>
         )}
 
         {/* File completion checkbox */}

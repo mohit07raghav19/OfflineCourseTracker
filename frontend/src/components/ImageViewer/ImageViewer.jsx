@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useCourse } from "../../context/CourseContext";
+import { useUI } from "../../context/UIContext";
 import styles from "./ImageViewer.module.css";
 
 const ImageViewer = ({ file }) => {
@@ -8,6 +9,7 @@ const ImageViewer = ({ file }) => {
   const [error, setError] = useState(null);
   const [scale, setScale] = useState(1);
   const { updateProgress } = useCourse();
+  const { sidebarOpen } = useUI();
 
   useEffect(() => {
     const loadImage = async () => {
@@ -90,7 +92,10 @@ const ImageViewer = ({ file }) => {
 
   return (
     <div className={styles.imageViewer}>
-      <div className={styles.header}>
+      <div
+        className={`${styles.header} ${
+          !sidebarOpen ? styles.headerPadded : ""
+        }`}>
         <h2 className={styles.fileName}>{file.name}</h2>
         <div className={styles.controls}>
           <span className={styles.badge}>Image</span>
