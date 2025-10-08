@@ -23,6 +23,66 @@
   background: var(--color-hover);
 }
 
+/* Different styling for directories - progressive boldness based on nesting level */
+.nodeContent:has(.expandIcon) {
+  font-weight: var(--font-medium);
+  margin-top: var(--spacing-xs);
+  margin-bottom: var(--spacing-xs);
+  padding-top: var(--spacing-sm);
+  padding-bottom: var(--spacing-sm);
+  border-top: 1px solid var(--color-border);
+}
+
+/* Level 0 folders (root level) - boldest */
+.nodeContent[data-level="0"][data-is-directory="true"] {
+  border-top-width: 2px;
+  border-top-color: rgba(59, 130, 246, 0.4);
+  font-weight: var(--font-semibold);
+}
+
+.nodeContent[data-level="0"][data-is-directory="true"] .name {
+  color: rgba(59, 130, 246, 0.9);
+}
+
+/* Level 1 folders - medium bold */
+.nodeContent[data-level="1"][data-is-directory="true"] {
+  border-top-width: 1.5px;
+  border-top-color: rgba(59, 130, 246, 0.3);
+  font-weight: var(--font-medium);
+}
+
+.nodeContent[data-level="1"][data-is-directory="true"] .name {
+  color: rgba(59, 130, 246, 0.75);
+}
+
+/* Level 2+ folders - lighter */
+.nodeContent[data-level="2"][data-is-directory="true"],
+.nodeContent[data-level="3"][data-is-directory="true"],
+.nodeContent[data-level="4"][data-is-directory="true"],
+.nodeContent[data-level="5"][data-is-directory="true"],
+.nodeContent[data-level="6"][data-is-directory="true"],
+.nodeContent[data-level="7"][data-is-directory="true"],
+.nodeContent[data-level="8"][data-is-directory="true"],
+.nodeContent[data-level="9"][data-is-directory="true"] {
+  border-top-width: 1px;
+  border-top-color: rgba(59, 130, 246, 0.2);
+}
+
+.nodeContent[data-level="2"][data-is-directory="true"] .name,
+.nodeContent[data-level="3"][data-is-directory="true"] .name,
+.nodeContent[data-level="4"][data-is-directory="true"] .name,
+.nodeContent[data-level="5"][data-is-directory="true"] .name,
+.nodeContent[data-level="6"][data-is-directory="true"] .name,
+.nodeContent[data-level="7"][data-is-directory="true"] .name,
+.nodeContent[data-level="8"][data-is-directory="true"] .name,
+.nodeContent[data-level="9"][data-is-directory="true"] .name {
+  color: rgba(59, 130, 246, 0.6);
+}
+
+.nodeContent:has(.expandIcon):hover {
+  background: rgba(59, 130, 246, 0.1);
+}
+
 .nodeContent:focus {
   outline: 2px solid var(--color-accent-blue);
   outline-offset: -2px;

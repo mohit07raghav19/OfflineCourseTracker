@@ -208,9 +208,11 @@ export const CourseProvider = ({ children }) => {
       if (!filePath) return;
 
       const pathParts = filePath.split("/");
-      const newExpanded = new Set(expandedFolders);
 
-      // Add all parent folder paths
+      // Create a completely new set with only the ancestors of this file
+      const newExpanded = new Set();
+
+      // Add all parent folder paths for the current file
       for (let i = 1; i < pathParts.length; i++) {
         const folderPath = pathParts.slice(0, i).join("/");
         newExpanded.add(folderPath);

@@ -114,7 +114,9 @@ const FileTreeNode = ({ node, level = 0 }) => {
         onKeyDown={handleKeyDown}
         role="button"
         tabIndex={0}
-        aria-expanded={isDirectory ? isExpanded : undefined}>
+        aria-expanded={isDirectory ? isExpanded : undefined}
+        data-level={level}
+        data-is-directory={isDirectory}>
         {isDirectory && (
           <svg
             className={`${styles.expandIcon} ${

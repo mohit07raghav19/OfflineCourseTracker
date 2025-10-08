@@ -53,11 +53,13 @@ const HTMLViewer = ({ file }) => {
 
   // Track scroll to bottom for completion (monitor iframe's document)
   useEffect(() => {
-    if (!iframeRef.current || hasScrolledToBottom) return;
+    if (!iframeRef.current || hasScrolledToBottom || !content) return;
 
     const checkScroll = () => {
       try {
         const iframe = iframeRef.current;
+        if (!iframe) return;
+
         const iframeDoc =
           iframe.contentDocument || iframe.contentWindow.document;
         const iframeWindow = iframe.contentWindow;
@@ -69,9 +71,11 @@ const HTMLViewer = ({ file }) => {
         const scrollHeight = iframeDoc.documentElement.scrollHeight;
         const clientHeight = iframeWindow.innerHeight;
 
-        const scrolledToBottom = scrollTop + clientHeight >= scrollHeight - 50; // 50px threshold
+        const scrollPercentage =
+          ((scrollTop + clientHeight) / scrollHeight) * 100;
 
-        if (scrolledToBottom && !hasScrolledToBottom) {
+        // Mark complete if scrolled to 95% or more
+        if (scrollPercentage >= 95 && !hasScrolledToBottom) {
           setHasScrolledToBottom(true);
           updateProgress({
             completed: true,
@@ -79,23 +83,30 @@ const HTMLViewer = ({ file }) => {
             duration: 1,
           });
         }
-      } catch {
+      } catch (err) {
         // Ignore cross-origin errors
-        console.log("Cannot track scroll for cross-origin iframe");
+        console.log(
+          "Cannot track scroll for cross-origin iframe:",
+          err.message
+        );
       }
     };
 
     const iframe = iframeRef.current;
-    const iframeWindow = iframe.contentWindow;
+    const iframeWindow = iframe?.contentWindow;
 
     if (iframeWindow) {
       iframeWindow.addEventListener("scroll", checkScroll);
-      // Check initial state after a short delay to ensure content is loaded
-      const timer = setTimeout(checkScroll, 500);
+      // Multiple checks with increasing delays
+      const timer1 = setTimeout(checkScroll, 500);
+      const timer2 = setTimeout(checkScroll, 1500);
+      const timer3 = setTimeout(checkScroll, 3000);
 
       return () => {
         iframeWindow.removeEventListener("scroll", checkScroll);
-        clearTimeout(timer);
+        clearTimeout(timer1);
+        clearTimeout(timer2);
+        clearTimeout(timer3);
       };
     }
   }, [content, hasScrolledToBottom, updateProgress]);

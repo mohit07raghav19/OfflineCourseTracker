@@ -1,0 +1,140 @@
+.floatingControls {
+  position: fixed;
+  display: flex;
+  gap: var(--spacing-sm);
+  background: var(--color-bg-secondary);
+  padding: var(--spacing-sm);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+  z-index: 50;
+  border: 1px solid var(--color-border);
+  backdrop-filter: blur(10px);
+  animation: slideUp 0.3s ease-out;
+  cursor: grab;
+  user-select: none;
+}
+
+.floatingControls.dragging {
+  cursor: grabbing;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4),
+    0 10px 10px -5px rgba(0, 0, 0, 0.3);
+}
+
+.dragHandle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  color: var(--color-text-secondary);
+  opacity: 0.5;
+  cursor: grab;
+  transition: opacity var(--transition-base);
+}
+
+.floatingControls:hover .dragHandle {
+  opacity: 1;
+}
+
+.dragging .dragHandle {
+  cursor: grabbing;
+  opacity: 1;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.controlButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  flex-shrink: 0;
+}
+
+.controlButton:hover:not(:disabled) {
+  background: var(--color-accent-blue);
+  border-color: var(--color-accent-blue);
+  color: var(--color-bg-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.controlButton:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.controlButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.completionButton {
+  width: 48px;
+  height: 48px;
+}
+
+.completionButton.completed {
+  background: var(--color-accent-green);
+  border-color: var(--color-accent-green);
+  color: var(--color-bg-primary);
+}
+
+.completionButton.completed:hover {
+  background: #059669;
+  border-color: #059669;
+  transform: translateY(-2px) scale(1.05);
+}
+
+.completionButton:not(.completed):hover {
+  background: var(--color-accent-green);
+  border-color: var(--color-accent-green);
+  color: var(--color-bg-primary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .floatingControls {
+    bottom: var(--spacing-lg);
+    right: var(--spacing-lg);
+    padding: var(--spacing-xs);
+    gap: var(--spacing-xs);
+  }
+
+  .controlButton {
+    width: 40px;
+    height: 40px;
+  }
+
+  .completionButton {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* Hide when sidebar is resizing to avoid interference */
+body:has([style*="cursor: col-resize"]) .floatingControls {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Hidden state for video files */
+.floatingControls.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease-out;
+}

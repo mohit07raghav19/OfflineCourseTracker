@@ -149,13 +149,21 @@ const PDFViewer = ({ file }) => {
   // Track scroll to bottom for completion
   useEffect(() => {
     const containerElement = containerRef.current;
-    if (!containerElement || hasScrolledToBottom || numPages === 0) return;
+    if (
+      !containerElement ||
+      hasScrolledToBottom ||
+      numPages === 0 ||
+      renderedPages.length === 0
+    )
+      return;
 
     const handleScroll = () => {
       const { scrollTop, scrollHeight, clientHeight } = containerElement;
-      const scrolledToBottom = scrollTop + clientHeight >= scrollHeight - 100; // 100px threshold
+      const scrollPercentage =
+        ((scrollTop + clientHeight) / scrollHeight) * 100;
 
-      if (scrolledToBottom && !hasScrolledToBottom) {
+      // Mark complete if scrolled to 95% or more
+      if (scrollPercentage >= 95 && !hasScrolledToBottom) {
         setHasScrolledToBottom(true);
         updateProgress({
           completed: true,
@@ -166,11 +174,19 @@ const PDFViewer = ({ file }) => {
     };
 
     containerElement.addEventListener("scroll", handleScroll);
-    // Check initial state
-    handleScroll();
 
-    return () => containerElement.removeEventListener("scroll", handleScroll);
-  }, [hasScrolledToBottom, numPages, updateProgress]);
+    // Multiple checks to ensure we catch completion
+    const timer1 = setTimeout(handleScroll, 500);
+    const timer2 = setTimeout(handleScroll, 1500);
+    const timer3 = setTimeout(handleScroll, 3000);
+
+    return () => {
+      containerElement.removeEventListener("scroll", handleScroll);
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      clearTimeout(timer3);
+    };
+  }, [hasScrolledToBottom, numPages, updateProgress, renderedPages.length]);
 
   const zoomIn = () => {
     setScale((prev) => Math.min(3, prev + 0.25));

@@ -48,13 +48,6 @@ const Sidebar = () => {
     };
   }, [isResizing]);
 
-  console.log("[Sidebar] Render state:", {
-    hasCourse: !!course,
-    courseName: course?.name,
-    fileCount: course?.files?.length,
-    sidebarOpen,
-  });
-
   if (!course) {
     console.log("[Sidebar] No course, returning null");
     return null;

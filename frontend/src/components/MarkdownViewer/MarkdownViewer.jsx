@@ -22,12 +22,8 @@ const processMarkdownImages = async (html, markdownPath, rootHandle) => {
   // Get the directory of the markdown file
   const markdownDir = markdownPath.substring(0, markdownPath.lastIndexOf("/"));
 
-  console.log(`[MarkdownViewer] Found ${images.length} images in markdown`);
-  console.log(`[MarkdownViewer] Markdown directory: ${markdownDir}`);
-
   for (const img of images) {
     const src = img.getAttribute("src");
-    console.log(`[MarkdownViewer] Processing image src: ${src}`);
 
     if (
       !src ||
@@ -69,9 +65,6 @@ const processMarkdownImages = async (html, markdownPath, rootHandle) => {
         imagePath = `${markdownDir}/${src}`;
       }
 
-      console.log(`[MarkdownViewer] Resolved image path: ${imagePath}`);
-      console.log(`[MarkdownViewer] Root handle name: ${rootHandle.name}`);
-
       // Load the image file
       const imageFile = await getFileFromPath(imagePath, rootHandle);
       if (imageFile) {
@@ -79,9 +72,6 @@ const processMarkdownImages = async (html, markdownPath, rootHandle) => {
         const url = URL.createObjectURL(blob);
         img.setAttribute("src", url);
         loadedUrls.push(url);
-        console.log(
-          `[MarkdownViewer] Successfully loaded and replaced image: ${src}`
-        );
       } else {
         console.warn(`[MarkdownViewer] Image file not found: ${imagePath}`);
       }
@@ -232,13 +222,15 @@ const MarkdownViewer = ({ file }) => {
   // Track scroll to bottom for completion
   useEffect(() => {
     const contentElement = contentRef.current;
-    if (!contentElement || hasScrolledToBottom) return;
+    if (!contentElement || hasScrolledToBottom || !htmlContent) return;
 
     const handleScroll = () => {
       const { scrollTop, scrollHeight, clientHeight } = contentElement;
-      const scrolledToBottom = scrollTop + clientHeight >= scrollHeight - 50; // 50px threshold
+      const scrollPercentage =
+        ((scrollTop + clientHeight) / scrollHeight) * 100;
 
-      if (scrolledToBottom && !hasScrolledToBottom) {
+      // Mark complete if scrolled to 95% or more
+      if (scrollPercentage >= 95 && !hasScrolledToBottom) {
         setHasScrolledToBottom(true);
         updateProgress({
           completed: true,
@@ -249,11 +241,19 @@ const MarkdownViewer = ({ file }) => {
     };
 
     contentElement.addEventListener("scroll", handleScroll);
-    // Check initial state (in case content is short and doesn't need scrolling)
-    handleScroll();
 
-    return () => contentElement.removeEventListener("scroll", handleScroll);
-  }, [hasScrolledToBottom, updateProgress]);
+    // Multiple checks with increasing delays
+    const timer1 = setTimeout(handleScroll, 500);
+    const timer2 = setTimeout(handleScroll, 1500);
+    const timer3 = setTimeout(handleScroll, 3000);
+
+    return () => {
+      contentElement.removeEventListener("scroll", handleScroll);
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      clearTimeout(timer3);
+    };
+  }, [hasScrolledToBottom, updateProgress, htmlContent]);
 
   if (loading) {
     return (
