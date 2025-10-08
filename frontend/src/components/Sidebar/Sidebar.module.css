@@ -5,12 +5,36 @@
   border-right: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
-  transition: transform var(--transition-base);
+  transition: transform var(--transition-base),
+    margin-left var(--transition-base);
   z-index: 100;
+  flex-shrink: 0;
 }
 
 .sidebarClosed {
-  transform: translateX(-100%);
+  transform: translateX(-320px);
+  margin-left: -320px;
+}
+
+.floatingToggle {
+  position: fixed;
+  top: var(--spacing-lg);
+  left: var(--spacing-lg);
+  z-index: 1001;
+  padding: var(--spacing-sm);
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+.floatingToggle:hover {
+  background: var(--color-hover);
+  box-shadow: var(--shadow-lg);
+  transform: scale(1.05);
 }
 
 .header {
