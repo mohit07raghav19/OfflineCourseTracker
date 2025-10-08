@@ -10,7 +10,7 @@ const Home = () => {
   const { loadCourse } = useCourse();
   const navigate = useNavigate();
 
-  // Handle folder selection using native directory picker
+  // Handle folder selection using native directory picker (Chromium)
   const handleFolderSelect = async () => {
     setError(null);
     setLoading(true);
@@ -18,11 +18,8 @@ const Home = () => {
     try {
       // Check if File System Access API is supported (Chromium browsers)
       if (!window.showDirectoryPicker) {
-        setLoading(false);
-        setError(
-          "Folder picker is not supported in this browser. " +
-            "Please use a Chromium-based browser (Chrome, Edge, Opera, Brave) for the best experience."
-        );
+        // Fallback for non-Chromium browsers
+        handleFallbackFolderPicker();
         return;
       }
 
@@ -44,6 +41,120 @@ const Home = () => {
       setLoading(false);
       setSelectedFolder(null);
     }
+  };
+
+  // Fallback for Firefox, Safari, and other non-Chromium browsers
+  const handleFallbackFolderPicker = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.webkitdirectory = true;
+    input.directory = true;
+    input.multiple = true;
+
+    input.onchange = async (e) => {
+      try {
+        const files = Array.from(e.target.files);
+        if (files.length === 0) {
+          setLoading(false);
+          return;
+        }
+
+        // Get folder name from the first file's path
+        const firstFile = files[0];
+        const pathParts = firstFile.webkitRelativePath.split("/");
+        const folderName = pathParts[0];
+        setSelectedFolder(folderName);
+
+        // Create a pseudo directory handle from files
+        const dirHandle = createPseudoDirectoryHandle(folderName, files);
+
+        await loadCourse(dirHandle);
+        navigate("/course");
+      } catch (err) {
+        console.error("Error processing folder:", err);
+        setError(err.message || "Failed to process folder. Please try again.");
+        setLoading(false);
+        setSelectedFolder(null);
+      }
+    };
+
+    input.onclick = () => {
+      // Reset in case user cancels
+      input.value = null;
+    };
+
+    input.oncancel = () => {
+      setLoading(false);
+      setSelectedFolder(null);
+    };
+
+    input.click();
+  };
+
+  // Create a pseudo directory handle compatible with our system
+  const createPseudoDirectoryHandle = (folderName, files) => {
+    // Helper to create a recursive values() function
+    const createValuesIterator = (childrenMap) => {
+      return async function* () {
+        for (const [, entry] of childrenMap.entries()) {
+          yield entry;
+        }
+      };
+    };
+
+    // Build a tree structure from flat file list
+    const root = {
+      name: folderName,
+      kind: "directory",
+      _isLegacy: true,
+      _files: files,
+      _children: new Map(),
+    };
+
+    // Build directory tree
+    files.forEach((file) => {
+      const parts = file.webkitRelativePath.split("/");
+      // Skip the root folder name
+      const pathParts = parts.slice(1);
+
+      let currentLevel = root._children;
+      let currentPath = folderName;
+
+      // Create directory structure
+      for (let i = 0; i < pathParts.length - 1; i++) {
+        const dirName = pathParts[i];
+        currentPath = `${currentPath}/${dirName}`;
+
+        if (!currentLevel.has(dirName)) {
+          const dirEntry = {
+            name: dirName,
+            kind: "directory",
+            _isLegacy: true,
+            _children: new Map(),
+          };
+          // Add values() method to each subdirectory
+          dirEntry.values = createValuesIterator(dirEntry._children);
+          currentLevel.set(dirName, dirEntry);
+        }
+        currentLevel = currentLevel.get(dirName)._children;
+      }
+
+      // Add file to the appropriate directory
+      const fileName = pathParts[pathParts.length - 1];
+      if (!currentLevel.has(fileName)) {
+        currentLevel.set(fileName, {
+          name: fileName,
+          kind: "file",
+          getFile: async () => file,
+          _file: file,
+        });
+      }
+    });
+
+    // Create values() iterator for root
+    root.values = createValuesIterator(root._children);
+
+    return root;
   };
 
   return (
@@ -153,9 +264,9 @@ const Home = () => {
               <li>The course will load instantly - that's it!</li>
             </ol>
             <div className={styles.note}>
-              <strong>Browser Compatibility:</strong> This app works best with
-              Chromium-based browsers (Chrome, Edge, Opera, Brave). Other
-              browsers may have limited functionality.
+              <strong>Browser Compatibility:</strong> This app works with all
+              modern browsers including Chrome, Firefox, Edge, Safari, Opera,
+              and Brave.
             </div>
             <div className={styles.note}>
               <strong>Privacy:</strong> All your data stays on your computer.

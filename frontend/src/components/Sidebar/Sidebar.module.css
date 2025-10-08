@@ -1,4 +1,5 @@
 .sidebar {
+  position: relative;
   width: 320px;
   height: 100vh;
   background: var(--color-bg-secondary);
@@ -105,6 +106,26 @@
   overflow-y: auto;
   overflow-x: hidden;
   padding: var(--spacing-sm);
+}
+
+.resizeHandle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4px;
+  height: 100%;
+  cursor: col-resize;
+  background: transparent;
+  transition: background 0.2s;
+  z-index: 10;
+}
+
+.resizeHandle:hover {
+  background: var(--color-accent-blue);
+}
+
+.resizeHandle:active {
+  background: var(--color-accent-blue);
 }
 
 .overlay {

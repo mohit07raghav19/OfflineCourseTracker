@@ -67,9 +67,17 @@ export const scanDirectory = async (dirHandle, path = "") => {
   try {
     const entries = [];
 
-    // Collect all entries
-    for await (const entry of dirHandle.values()) {
-      entries.push(entry);
+    // Check if this is a legacy file-input based directory
+    if (dirHandle._isLegacy) {
+      // Process legacy file list
+      for await (const entry of dirHandle.values()) {
+        entries.push(entry);
+      }
+    } else {
+      // Collect all entries from modern API
+      for await (const entry of dirHandle.values()) {
+        entries.push(entry);
+      }
     }
 
     // Sort: directories first, then files alphabetically

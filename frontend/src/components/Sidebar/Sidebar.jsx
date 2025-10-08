@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect } from "react";
 import { useCourse } from "../../context/CourseContext";
 import { useUI } from "../../context/UIContext";
 import FileTree from "../FileTree/FileTree";
@@ -6,6 +7,46 @@ import styles from "./Sidebar.module.css";
 const Sidebar = () => {
   const { course, progress: courseProgress, getOverallProgress } = useCourse();
   const { sidebarOpen, toggleSidebar } = useUI();
+  const [sidebarWidth, setSidebarWidth] = useState(320);
+  const [isResizing, setIsResizing] = useState(false);
+  const sidebarRef = useRef(null);
+
+  // Handle resize start
+  const handleMouseDown = (e) => {
+    e.preventDefault();
+    setIsResizing(true);
+  };
+
+  // Handle resize
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (!isResizing) return;
+
+      const newWidth = e.clientX;
+      // Constrain width between 200px and 600px
+      if (newWidth >= 200 && newWidth <= 600) {
+        setSidebarWidth(newWidth);
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsResizing(false);
+    };
+
+    if (isResizing) {
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+      document.body.style.cursor = "col-resize";
+      document.body.style.userSelect = "none";
+    }
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    };
+  }, [isResizing]);
 
   console.log("[Sidebar] Render state:", {
     hasCourse: !!course,
@@ -42,9 +83,11 @@ const Sidebar = () => {
       )}
 
       <aside
+        ref={sidebarRef}
         className={`${styles.sidebar} ${
           !sidebarOpen ? styles.sidebarClosed : ""
-        }`}>
+        }`}
+        style={{ width: sidebarOpen ? `${sidebarWidth}px` : undefined }}>
         <div className={styles.header}>
           <div className={styles.courseInfo}>
             <h2 className={styles.courseName}>{course.name}</h2>
@@ -71,6 +114,15 @@ const Sidebar = () => {
         <div className={styles.fileTreeContainer}>
           <FileTree structure={course.structure} />
         </div>
+
+        {/* Resize handle */}
+        {sidebarOpen && (
+          <div
+            className={styles.resizeHandle}
+            onMouseDown={handleMouseDown}
+            title="Drag to resize"
+          />
+        )}
       </aside>
 
       {/* Mobile overlay */}
