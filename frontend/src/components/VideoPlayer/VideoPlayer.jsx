@@ -17,7 +17,7 @@ const VideoPlayer = ({ file }) => {
   const [showControls, setShowControls] = useState(true);
   const controlsTimeoutRef = useRef(null);
 
-  const { getFileURL, updateProgress, goToNext, getFileProgress } = useCourse();
+  const { getFileURL, updateProgress, goToNext } = useCourse();
 
   // Toggle fullscreen
   const toggleFullscreen = useCallback(() => {
@@ -211,11 +211,14 @@ const VideoPlayer = ({ file }) => {
       setDuration(video.duration);
       video.volume = volume;
 
-      // Resume from last position if available
-      const progress = getFileProgress(file);
-      if (progress && progress.lastPosition && progress.lastPosition > 0) {
-        video.currentTime = progress.lastPosition;
-      }
+      // Always start from beginning when navigating to a new video
+      video.currentTime = 0;
+
+      // Auto-play the video
+      video.play().catch((err) => {
+        console.log("Auto-play prevented:", err);
+        // Auto-play was prevented, user needs to click play
+      });
     }
   };
 
