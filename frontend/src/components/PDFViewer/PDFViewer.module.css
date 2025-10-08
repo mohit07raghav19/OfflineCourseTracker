@@ -1,0 +1,37 @@
+.pdfViewer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-secondary);
+}
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-2xl);
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+.placeholder svg {
+  opacity: 0.5;
+  color: var(--color-text-muted);
+}
+
+.placeholder h3 {
+  font-size: var(--text-xl);
+  color: var(--color-text-primary);
+}
+
+.placeholder p {
+  font-size: var(--text-base);
+}
+
+.info {
+  color: var(--color-accent-blue) !important;
+  font-style: italic;
+}
