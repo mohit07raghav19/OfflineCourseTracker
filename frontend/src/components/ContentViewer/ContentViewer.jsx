@@ -5,6 +5,7 @@ import MarkdownViewer from "../MarkdownViewer/MarkdownViewer";
 import HTMLViewer from "../HTMLViewer/HTMLViewer";
 import TextViewer from "../TextViewer/TextViewer";
 import ImageViewer from "../ImageViewer/ImageViewer";
+import BottomBar from "../BottomBar/BottomBar";
 import styles from "./ContentViewer.module.css";
 
 const ContentViewer = () => {
@@ -49,7 +50,12 @@ const ContentViewer = () => {
     }
   };
 
-  return <div className={styles.contentViewer}>{renderViewer()}</div>;
+  return (
+    <div className={styles.contentViewer}>
+      <div className={styles.viewerContent}>{renderViewer()}</div>
+      <BottomBar />
+    </div>
+  );
 };
 
 export default ContentViewer;

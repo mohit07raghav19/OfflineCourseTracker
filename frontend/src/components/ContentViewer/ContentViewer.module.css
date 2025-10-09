@@ -4,6 +4,14 @@
   flex-direction: column;
   overflow: hidden;
   background: var(--color-bg-primary);
+  position: relative;
+}
+
+.viewerContent {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .empty,

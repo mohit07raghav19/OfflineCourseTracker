@@ -1,0 +1,128 @@
+.bottomBar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: var(--card-background, var(--color-bg-secondary));
+  border-top: 1px solid var(--border-color, var(--color-border));
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+  transition: opacity 0.3s ease-out, max-height 0.3s ease-out, padding 0.3s ease-out;
+  max-height: 80px;
+  overflow: hidden;
+}
+
+.bottomBar.hidden {
+  opacity: 0;
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  pointer-events: none;
+}
+
+.controls {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.controlButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  min-height: 44px;
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  flex-shrink: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.controlButton svg {
+  flex-shrink: 0;
+}
+
+.controlButton span {
+  flex-shrink: 0;
+}
+
+.controlButton:hover:not(:disabled) {
+  background: var(--color-accent-blue);
+  border-color: var(--color-accent-blue);
+  color: var(--color-bg-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.controlButton:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.controlButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.completionButton {
+  padding: 0.625rem 1.5rem;
+}
+
+.completionButton.completed {
+  background: var(--color-accent-green);
+  border-color: var(--color-accent-green);
+  color: var(--color-bg-primary);
+}
+
+.completionButton.completed:hover {
+  background: #059669;
+  border-color: #059669;
+  transform: translateY(-2px) scale(1.05);
+}
+
+.completionButton:not(.completed):hover {
+  background: var(--color-accent-green);
+  border-color: var(--color-accent-green);
+  color: var(--color-bg-primary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .bottomBar {
+    padding: var(--spacing-md);
+  }
+
+  .controls {
+    gap: var(--spacing-xs);
+  }
+
+  .controlButton {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+
+  .completionButton {
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* Hide text on very small screens, show only icons */
+@media (max-width: 480px) {
+  .controlButton span {
+    display: none;
+  }
+
+  .controlButton {
+    padding: 0.625rem;
+    min-width: 40px;
+  }
+
+  .completionButton {
+    padding: 0.625rem;
+  }
+}

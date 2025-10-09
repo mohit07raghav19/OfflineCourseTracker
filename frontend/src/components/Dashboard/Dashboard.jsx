@@ -4,7 +4,6 @@ import { useCourse } from "../../context/CourseContext";
 import { useUI } from "../../context/UIContext";
 import Sidebar from "../Sidebar/Sidebar";
 import ContentViewer from "../ContentViewer/ContentViewer";
-import FloatingControls from "../FloatingControls/FloatingControls";
 import styles from "./Dashboard.module.css";
 
 const Dashboard = () => {
@@ -126,7 +125,6 @@ const Dashboard = () => {
           <span>Back to Home</span>
         </button>
         <ContentViewer />
-        <FloatingControls />
       </main>
     </div>
   );
