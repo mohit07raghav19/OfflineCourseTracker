@@ -14,7 +14,7 @@ The easiest way to run the Offline Course Tracker is using Docker. This eliminat
 1. **Clone the repository**:
 
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/mohit07raghav19/OfflineCourseTracker.git 
    cd OfflineCourseTracker
    ```
 
@@ -32,8 +32,8 @@ The easiest way to run the Offline Course Tracker is using Docker. This eliminat
 
 3. **Access the application**:
 
-   - Frontend: http://localhost:5173
-   - Backend: http://localhost:3000
+   - Frontend: http://localhost:3000
+   - Backend: http://localhost:3001
 
 4. **Stop the application**:
 
@@ -114,7 +114,7 @@ To build optimized production images:
 ```bash
 # Change ports in docker-compose.yml
 ports:
-  - "5174:5173"  # Use different host port
+  - "3002:3000"  # Use different host port
 ```
 
 **Containers not starting**:
@@ -179,14 +179,14 @@ Create `.env` files if needed:
 **Frontend** (`frontend/.env`):
 
 ```env
-VITE_API_URL=http://localhost:3000
+VITE_API_URL=http://localhost:3001/api
 ```
 
 **Backend** (`backend/.env`):
 
 ```env
 NODE_ENV=development
-PORT=3000
+PORT=3001
 ```
 
 These are automatically loaded by Docker Compose.
