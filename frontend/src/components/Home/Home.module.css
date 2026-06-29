@@ -16,17 +16,16 @@
 }
 
 .title {
-  font-size: var(--text-3xl);
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
   font-weight: var(--font-bold);
   margin-bottom: var(--spacing-md);
-  background: linear-gradient(
-    135deg,
-    var(--color-accent-blue),
-    var(--color-accent-green)
-  );
+  background: linear-gradient(135deg,
+      var(--color-accent-blue),
+      var(--color-accent-purple));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  letter-spacing: -0.02em;
 }
 
 .subtitle {
@@ -44,13 +43,16 @@
 
 .feature {
   background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
   padding: var(--spacing-lg);
   border-radius: var(--border-radius-lg);
-  transition: transform var(--transition-base);
+  transition: all var(--transition-base);
 }
 
 .feature:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
+  border-color: var(--color-border-accent);
+  box-shadow: var(--shadow-md);
 }
 
 .featureIcon {
@@ -82,23 +84,23 @@
   align-items: center;
   justify-content: center;
   gap: var(--spacing-md);
-  padding: var(--spacing-xl) var(--spacing-2xl);
-  background: linear-gradient(135deg, var(--color-accent-blue), #2563eb);
-  color: var(--color-text-primary);
-  font-size: var(--text-xl);
+  padding: 0.875rem var(--spacing-xl);
+  background: linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-purple));
+  color: #fff;
+  font-size: var(--text-lg);
   font-weight: var(--font-semibold);
   border-radius: var(--border-radius-lg);
   transition: all var(--transition-base);
   width: 100%;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.35);
   cursor: pointer;
+  letter-spacing: -0.01em;
 }
 
 .pickerButton:hover:not(:disabled) {
-  background: linear-gradient(135deg, #2563eb, var(--color-accent-blue));
   transform: translateY(-2px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3),
-    0 10px 10px -5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 28px rgba(99, 102, 241, 0.5);
+  filter: brightness(1.05);
 }
 
 .pickerButton:active:not(:disabled) {
@@ -111,8 +113,8 @@
 }
 
 .pickerButton svg {
-  width: 28px;
-  height: 28px;
+  width: 22px;
+  height: 22px;
 }
 
 .selectedInfo {
@@ -135,6 +137,7 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -182,12 +185,13 @@
 
 .note {
   padding: var(--spacing-md) var(--spacing-lg);
-  background: rgba(59, 130, 246, 0.1);
-  border-left: 3px solid var(--color-accent-blue);
+  background: var(--color-accent-blue-dim);
+  border-left: 2px solid var(--color-accent-blue);
   border-radius: var(--border-radius-md);
   font-size: var(--text-sm);
   color: var(--color-text-secondary);
   line-height: 1.6;
+  text-align: left;
 }
 
 .note:not(:last-child) {
@@ -314,11 +318,9 @@
 
 .recentProgressFill {
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    var(--color-accent-blue),
-    var(--color-accent-green)
-  );
+  background: linear-gradient(90deg,
+      var(--color-accent-blue),
+      var(--color-accent-green));
   transition: width 0.3s ease;
   border-radius: var(--border-radius-full);
 }
@@ -425,11 +427,9 @@
 
 .recentProgressFill {
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    var(--color-accent-blue),
-    var(--color-accent-green)
-  );
+  background: linear-gradient(90deg,
+      var(--color-accent-blue),
+      var(--color-accent-green));
   transition: width 0.3s ease;
   border-radius: var(--border-radius-full);
 }

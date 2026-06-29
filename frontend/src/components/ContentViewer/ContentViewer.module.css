@@ -5,15 +5,19 @@
   overflow: hidden;
   background: var(--color-bg-primary);
   position: relative;
+  min-width: 0;
 }
 
+/* Video fills all space — BottomBar is OUTSIDE viewerContent for non-video */
 .viewerContent {
   flex: 1;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
+/* ── Empty / unsupported states ─────────────────────────────── */
 .empty,
 .unsupported {
   display: flex;
@@ -24,22 +28,23 @@
   padding: var(--spacing-2xl);
   text-align: center;
   color: var(--color-text-secondary);
+  gap: var(--spacing-md);
 }
 
 .empty svg,
 .unsupported svg {
-  margin-bottom: var(--spacing-lg);
-  opacity: 0.5;
+  opacity: 0.25;
 }
 
 .empty h2,
 .unsupported h3 {
   font-size: var(--text-xl);
+  font-weight: var(--font-semibold);
   color: var(--color-text-primary);
-  margin-bottom: var(--spacing-sm);
 }
 
 .empty p,
 .unsupported p {
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
 }

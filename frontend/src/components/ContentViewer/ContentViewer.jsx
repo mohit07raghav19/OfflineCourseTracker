@@ -11,22 +11,12 @@ import styles from "./ContentViewer.module.css";
 const ContentViewer = () => {
   const { currentFile } = useCourse();
 
-  if (!currentFile) {
-    return (
-      <div className={styles.empty}>
-        <svg viewBox="0 0 24 24" fill="currentColor" width="64" height="64">
-          <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z" />
-        </svg>
-        <h2>No File Selected</h2>
-        <p>Select a file from the sidebar to start learning</p>
-      </div>
-    );
-  }
-
   const renderViewer = () => {
+    if (!currentFile) return null;
     switch (currentFile.fileType) {
       case "video":
-        return <VideoPlayer file={currentFile} />;
+        // Persistently rendered below, not here
+        return null;
       case "document":
         return <PDFViewer file={currentFile} />;
       case "markdown":
@@ -50,9 +40,28 @@ const ContentViewer = () => {
     }
   };
 
+  const isVideo = currentFile?.fileType === "video";
+
   return (
     <div className={styles.contentViewer}>
-      <div className={styles.viewerContent}>{renderViewer()}</div>
+      <div className={styles.viewerContent}>
+        {!currentFile ? (
+          <div className={styles.empty}>
+            <svg viewBox="0 0 24 24" fill="currentColor" width="64" height="64">
+              <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z" />
+            </svg>
+            <h2>No File Selected</h2>
+            <p>Select a file from the sidebar to start learning</p>
+          </div>
+        ) : (
+          !isVideo && renderViewer()
+        )}
+
+        {/* VideoPlayer is ALWAYS mounted in the DOM to keep Chrome/browser extensions attached */}
+        <div style={{ display: isVideo ? "block" : "none", height: "100%", width: "100%" }}>
+          <VideoPlayer file={isVideo ? currentFile : null} />
+        </div>
+      </div>
       <BottomBar />
     </div>
   );

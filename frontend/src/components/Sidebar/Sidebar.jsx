@@ -4,34 +4,29 @@ import { useUI } from "../../context/UIContext";
 import FileTree from "../FileTree/FileTree";
 import styles from "./Sidebar.module.css";
 
-const Sidebar = () => {
+const Sidebar = ({ onNavigateHome }) => {
   const { course, progress: courseProgress, getOverallProgress } = useCourse();
   const { sidebarOpen, toggleSidebar } = useUI();
-  const [sidebarWidth, setSidebarWidth] = useState(320);
+  const [sidebarWidth, setSidebarWidth] = useState(300);
   const [isResizing, setIsResizing] = useState(false);
   const sidebarRef = useRef(null);
 
-  // Handle resize start
+  // Handle resize
   const handleMouseDown = (e) => {
     e.preventDefault();
     setIsResizing(true);
   };
 
-  // Handle resize
   useEffect(() => {
     const handleMouseMove = (e) => {
       if (!isResizing) return;
-
       const newWidth = e.clientX;
-      // Constrain width between 200px and 600px
-      if (newWidth >= 200 && newWidth <= 600) {
+      if (newWidth >= 220 && newWidth <= 560) {
         setSidebarWidth(newWidth);
       }
     };
 
-    const handleMouseUp = () => {
-      setIsResizing(false);
-    };
+    const handleMouseUp = () => setIsResizing(false);
 
     if (isResizing) {
       document.addEventListener("mousemove", handleMouseMove);
@@ -48,95 +43,99 @@ const Sidebar = () => {
     };
   }, [isResizing]);
 
-  if (!course) {
-    console.log("[Sidebar] No course, returning null");
-    return null;
-  }
+  if (!course) return null;
 
   const progress = getOverallProgress();
   const completedCount =
-    course.files.filter((f) => {
-      const prog = courseProgress?.files?.[f.path];
-      return prog?.completed;
-    }).length || 0;
+    course.files.filter((f) => courseProgress?.files?.[f.path]?.completed).length || 0;
 
   return (
     <>
-      {/* Floating toggle button when sidebar is closed */}
+      {/* Floating toggle — shown when sidebar is closed */}
       {!sidebarOpen && (
         <button
           className={styles.floatingToggle}
           onClick={toggleSidebar}
-          title="Open sidebar"
-          aria-label="Open sidebar">
-          <svg
-            class="w-6 h-6 text-gray-800 dark:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="none"
-            viewBox="0 0 24 24">
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-width="2"
-              d="M5 7h14M5 12h14M5 17h14"
-            />
+          title="Open sidebar (c)"
+          aria-label="Open sidebar"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" width="18" height="18">
+            <path strokeLinecap="round" d="M5 7h14M5 12h14M5 17h14" />
           </svg>
         </button>
       )}
 
       <aside
         ref={sidebarRef}
-        className={`${styles.sidebar} ${
-          !sidebarOpen ? styles.sidebarClosed : ""
-        }`}
-        style={{ width: sidebarOpen ? `${sidebarWidth}px` : undefined }}>
+        className={`${styles.sidebar} ${!sidebarOpen ? styles.sidebarClosed : ""}`}
+        style={{ width: sidebarOpen ? `${sidebarWidth}px` : "0px" }}
+      >
+        {/* ── Header ─────────────────────────── */}
         <div className={styles.header}>
-          <div className={styles.courseInfo}>
-            <h2 className={styles.courseName}>{course.name}</h2>
-            <div className={styles.progressBar}>
-              <div
-                className={styles.progressFill}
-                style={{ width: `${progress}%` }}></div>
-            </div>
-            <p className={styles.progressText}>
-              {progress}% Complete ({completedCount}/{course.totalFiles} files)
-            </p>
+          <div className={styles.topRow}>
+            {/* Back to home */}
+            <button
+              className={styles.backBtn}
+              onClick={onNavigateHome}
+              title="Back to Home"
+              aria-label="Back to home"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" width="16" height="16">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+            </button>
+
+            <span className={styles.courseTag}>Course</span>
+
+            {/* Close sidebar */}
+            <button
+              className={styles.toggleBtn}
+              onClick={toggleSidebar}
+              title="Close sidebar (c)"
+              aria-label="Close sidebar"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" width="16" height="16">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
-          <button
-            className={styles.toggleButton}
-            onClick={toggleSidebar}
-            title="Close sidebar"
-            aria-label="Close sidebar">
-            <svg
-              class="w-6 h-6 text-gray-800 dark:text-white"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              fill="none"
-              viewBox="0 0 24 24">
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M7.99994 10 6 11.9999l1.99994 2M11 5v14m-7 0h16c.5523 0 1-.4477 1-1V6c0-.55228-.4477-1-1-1H4c-.55228 0-1 .44772-1 1v12c0 .5523.44772 1 1 1Z"
-              />
-            </svg>
-          </button>
+
+          <h2 className={styles.courseName} title={course.name}>
+            {course.name}
+          </h2>
+
+          {/* Progress */}
+          <div className={styles.progressWrap}>
+            <div className={styles.progressBar}>
+              <div className={styles.progressFill} style={{ width: `${progress}%` }} />
+            </div>
+            <span className={styles.progressText}>
+              {completedCount} / {course.totalFiles} complete
+              <span className={styles.progressPct}>{progress}%</span>
+            </span>
+          </div>
         </div>
 
-        <div className={styles.fileTreeContainer}>
+        {/* ── File tree ───────────────────────── */}
+        <div className={styles.treeContainer}>
           <FileTree structure={course.structure} />
+        </div>
+
+        {/* ── Footer shortcut hint ─────────────── */}
+        <div className={styles.footer}>
+          <span className={styles.hintText}>
+            <kbd className={styles.kbd}>?</kbd> shortcuts
+            &nbsp;·&nbsp;
+            <kbd className={styles.kbd}>c</kbd> sidebar
+            &nbsp;·&nbsp;
+            <kbd className={styles.kbd}>j</kbd><kbd className={styles.kbd}>k</kbd> / <kbd className={styles.kbd}>↑</kbd><kbd className={styles.kbd}>↓</kbd>
+          </span>
         </div>
 
         {/* Resize handle */}
         {sidebarOpen && (
           <div
-            className={styles.resizeHandle}
+            className={`${styles.resizeHandle} ${isResizing ? styles.resizing : ""}`}
             onMouseDown={handleMouseDown}
             title="Drag to resize"
           />
@@ -145,7 +144,7 @@ const Sidebar = () => {
 
       {/* Mobile overlay */}
       {sidebarOpen && (
-        <div className={styles.overlay} onClick={toggleSidebar}></div>
+        <div className={styles.overlay} onClick={toggleSidebar} />
       )}
     </>
   );
