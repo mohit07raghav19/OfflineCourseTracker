@@ -7,6 +7,16 @@
 
 **Local Course Progress Dashboard** – A fully offline, privacy-focused web application for tracking your learning journey through downloaded courses.
 
+## 🎬 Demo Walkthrough
+
+Check out the screen recording showing the local course load, multi-format media rendering (Video, PDF, HTML, Markdown, Plain Text), and scroll-based automatic progress tracking:
+
+<video controls width="800">
+  <source src="https://github.com/user-attachments/assets/bf43eb6c-056f-497d-95e6-0f32812aa2df" type="video/mp4">
+</video>
+
+*(If viewing locally, you can open [demo.mp4](demo.mp4) directly.)*
+
 ---
 
 ## 🌟 Overview
