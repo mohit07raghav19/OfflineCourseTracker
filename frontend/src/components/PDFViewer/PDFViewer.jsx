@@ -224,9 +224,8 @@ const PDFViewer = ({ file }) => {
   return (
     <div className={styles.pdfViewer}>
       <div
-        className={`${styles.header} ${
-          !sidebarOpen ? styles.headerPadded : ""
-        }`}>
+        className={`${styles.header} ${!sidebarOpen ? styles.headerPadded : ""
+          }`}>
         <h2 className={styles.fileName}>{file.name}</h2>
         <div className={styles.controls}>
           <span className={styles.badge}>PDF</span>

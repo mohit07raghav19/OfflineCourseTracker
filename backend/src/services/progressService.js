@@ -14,7 +14,7 @@ export const readProgress = async (coursePath) => {
     if (!exists) {
       // Return empty progress structure if file doesn't exist
       return {
-        version: '1.0',
+        version: '1.1.0',
         courseId: null,
         courseName: path.basename(coursePath),
         coursePath: coursePath,
@@ -152,7 +152,7 @@ export const toggleCompletion = async (coursePath, filePath) => {
 export const initializeProgress = async (courseId, coursePath, totalFiles) => {
   try {
     const progressData = {
-      version: '1.0',
+      version: '1.1.0',
       courseId: courseId,
       courseName: path.basename(coursePath),
       coursePath: coursePath,

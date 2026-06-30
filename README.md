@@ -1,6 +1,6 @@
 # OfflineCourseTracker 🚀
 
-![Version](https://img.shields.io/badge/version-1.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)
 ![Privacy](https://img.shields.io/badge/privacy-focused-green.svg)
 ![Offline](https://img.shields.io/badge/offline--first-yes-orange.svg)
 ![AI-Assisted](https://img.shields.io/badge/ai--assisted-yes-blueviolet.svg)
