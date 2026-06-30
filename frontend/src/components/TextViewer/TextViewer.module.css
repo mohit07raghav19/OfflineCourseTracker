@@ -8,18 +8,17 @@
 }
 
 .header {
-  padding: var(--spacing-lg) var(--spacing-xl);
-  padding-right: 180px; /* Space for back button */
+  padding: 0.75rem 1.25rem;
   border-bottom: 1px solid var(--color-border);
   background: var(--color-bg-secondary);
-  transition: padding-left 0.3s ease;
-  position: relative;
+  transition: padding-left 0.25s ease;
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .headerPadded {
-  padding-left: 80px; /* Space for floating sidebar toggle button */
+  padding-left: 60px;
 }
 
 .fileName {

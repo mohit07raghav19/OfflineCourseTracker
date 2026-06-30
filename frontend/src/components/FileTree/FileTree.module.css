@@ -3,181 +3,169 @@
 }
 
 .node {
-  margin-bottom: 2px;
+  margin-bottom: 1px;
 }
 
+/* ── Node content row ────────────────────────────────────────── */
 .nodeContent {
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
-  padding: var(--spacing-xs) var(--spacing-sm);
+  gap: 0.375rem;
+  padding: 0.3rem 0.5rem;
   border-radius: var(--border-radius-md);
   cursor: pointer;
-  transition: all var(--transition-base);
-  color: var(--color-text-primary);
+  transition: background var(--transition-fast), color var(--transition-fast);
+  color: var(--color-text-secondary);
   font-size: var(--text-sm);
   position: relative;
+  min-height: 30px;
 }
 
 .nodeContent:hover {
-  background: var(--color-hover);
-}
-
-/* Different styling for directories - progressive boldness based on nesting level */
-.nodeContent:has(.expandIcon) {
-  font-weight: var(--font-medium);
-  margin-top: var(--spacing-xs);
-  margin-bottom: var(--spacing-xs);
-  padding-top: var(--spacing-sm);
-  padding-bottom: var(--spacing-sm);
-  border-top: 1px solid var(--color-border);
-}
-
-/* Level 0 folders (root level) - boldest */
-.nodeContent[data-level="0"][data-is-directory="true"] {
-  border-top-width: 2px;
-  border-top-color: rgba(59, 130, 246, 0.4);
-  font-weight: var(--font-semibold);
-}
-
-.nodeContent[data-level="0"][data-is-directory="true"] .name {
-  color: rgba(59, 130, 246, 0.9);
-}
-
-/* Level 1 folders - medium bold */
-.nodeContent[data-level="1"][data-is-directory="true"] {
-  border-top-width: 1.5px;
-  border-top-color: rgba(59, 130, 246, 0.3);
-  font-weight: var(--font-medium);
-}
-
-.nodeContent[data-level="1"][data-is-directory="true"] .name {
-  color: rgba(59, 130, 246, 0.75);
-}
-
-/* Level 2+ folders - lighter */
-.nodeContent[data-level="2"][data-is-directory="true"],
-.nodeContent[data-level="3"][data-is-directory="true"],
-.nodeContent[data-level="4"][data-is-directory="true"],
-.nodeContent[data-level="5"][data-is-directory="true"],
-.nodeContent[data-level="6"][data-is-directory="true"],
-.nodeContent[data-level="7"][data-is-directory="true"],
-.nodeContent[data-level="8"][data-is-directory="true"],
-.nodeContent[data-level="9"][data-is-directory="true"] {
-  border-top-width: 1px;
-  border-top-color: rgba(59, 130, 246, 0.2);
-}
-
-.nodeContent[data-level="2"][data-is-directory="true"] .name,
-.nodeContent[data-level="3"][data-is-directory="true"] .name,
-.nodeContent[data-level="4"][data-is-directory="true"] .name,
-.nodeContent[data-level="5"][data-is-directory="true"] .name,
-.nodeContent[data-level="6"][data-is-directory="true"] .name,
-.nodeContent[data-level="7"][data-is-directory="true"] .name,
-.nodeContent[data-level="8"][data-is-directory="true"] .name,
-.nodeContent[data-level="9"][data-is-directory="true"] .name {
-  color: rgba(59, 130, 246, 0.6);
-}
-
-.nodeContent:has(.expandIcon):hover {
-  background: rgba(59, 130, 246, 0.1);
+  background: var(--color-bg-hover);
+  color: var(--color-text-primary);
 }
 
 .nodeContent:focus {
-  outline: 2px solid var(--color-accent-blue);
-  outline-offset: -2px;
+  outline: none;
+  background: var(--color-bg-hover);
 }
 
+/* ── Active (current file) ───────────────────────────────────── */
 .active {
-  background: var(--color-accent-blue) !important;
-  color: var(--color-bg-primary) !important;
-  font-weight: var(--font-semibold);
+  background: var(--color-accent-blue-dim) !important;
+  color: var(--color-accent-blue) !important;
+  font-weight: var(--font-medium);
 }
 
+.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 20%;
+  height: 60%;
+  width: 2.5px;
+  background: var(--color-accent-blue);
+  border-radius: 0 2px 2px 0;
+}
+
+/* ── Completed files ─────────────────────────────────────────── */
 .completed {
-  opacity: 0.7;
+  opacity: 0.65;
 }
 
 .completed .name {
   text-decoration: line-through;
+  text-decoration-color: var(--color-text-muted);
+  text-decoration-thickness: 1px;
 }
 
 .active.completed {
   opacity: 1;
 }
 
+/* ── Directory rows ──────────────────────────────────────────── */
+.nodeContent:has(.expandIcon) {
+  font-weight: var(--font-medium);
+  color: var(--color-text-primary);
+  margin-top: 0.125rem;
+  border-radius: var(--border-radius-md);
+}
+
+/* Root level dirs */
+.nodeContent[data-level="0"][data-is-directory="true"] {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-primary);
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+}
+
+/* Level 1 */
+.nodeContent[data-level="1"][data-is-directory="true"] {
+  font-weight: var(--font-medium);
+  color: rgba(139, 144, 164, 0.9);
+}
+
+/* Level 2+ */
+.nodeContent[data-level="2"][data-is-directory="true"],
+.nodeContent[data-level="3"][data-is-directory="true"],
+.nodeContent[data-level="4"][data-is-directory="true"] {
+  color: rgba(139, 144, 164, 0.7);
+  font-weight: var(--font-normal);
+}
+
+.nodeContent:has(.expandIcon):hover {
+  background: var(--color-bg-hover);
+}
+
+/* ── Expand icon ─────────────────────────────────────────────── */
 .expandIcon {
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
   transition: transform var(--transition-base);
   flex-shrink: 0;
+  opacity: 0.6;
 }
 
 .expanded {
   transform: rotate(90deg);
 }
 
+/* ── File icon ───────────────────────────────────────────────── */
 .icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-text-secondary);
   flex-shrink: 0;
+  opacity: 0.65;
 }
 
 .active .icon {
-  color: var(--color-bg-primary);
+  opacity: 1;
+  color: var(--color-accent-blue);
 }
 
+/* ── Name ────────────────────────────────────────────────────── */
 .name {
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   line-height: 1.5;
+  font-size: var(--text-sm);
 }
 
-.checkmark {
-  color: var(--color-accent-green);
-  flex-shrink: 0;
-  margin-left: auto;
-}
-
-.active .checkmark {
-  color: var(--color-bg-primary);
-}
-
-/* Folder progress indicator */
+/* ── Folder progress badge ───────────────────────────────────── */
 .folderProgress {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
   margin-left: auto;
-  padding: 2px 6px;
+  padding: 1px 5px;
   background: var(--color-bg-tertiary);
   border-radius: var(--border-radius-sm);
   font-size: var(--text-xs);
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
   flex-shrink: 0;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.nodeContent:hover .folderProgress {
+  opacity: 1;
 }
 
 .folderProgressText {
   font-variant-numeric: tabular-nums;
 }
 
-.folderCheckmark {
-  color: var(--color-accent-green);
-}
-
 .active .folderProgress {
-  background: rgba(255, 255, 255, 0.2);
-  color: var(--color-bg-primary);
+  background: rgba(99, 102, 241, 0.2);
+  color: var(--color-accent-blue);
+  opacity: 1;
 }
 
-.active .folderCheckmark {
-  color: var(--color-bg-primary);
-}
-
-/* Completion checkbox */
+/* ── Checkbox ────────────────────────────────────────────────── */
 .checkbox {
   display: flex;
   align-items: center;
@@ -186,16 +174,16 @@
   padding: 2px;
   background: transparent;
   border: none;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
   cursor: pointer;
   border-radius: var(--border-radius-sm);
-  transition: all var(--transition-base);
+  transition: all var(--transition-fast);
   flex-shrink: 0;
   opacity: 0;
 }
 
 .nodeContent:hover .checkbox {
-  opacity: 1;
+  opacity: 0.7;
 }
 
 .checkbox.checked {
@@ -204,41 +192,35 @@
 }
 
 .checkbox:hover {
-  background: var(--color-hover);
+  background: var(--color-bg-elevated);
+  opacity: 1 !important;
   transform: scale(1.1);
 }
 
 .active .checkbox {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(99, 102, 241, 0.6);
 }
 
 .active .checkbox.checked {
-  color: var(--color-bg-primary);
+  color: var(--color-accent-green);
 }
 
-.active .checkbox:hover {
-  background: rgba(255, 255, 255, 0.2);
-  color: var(--color-bg-primary);
-}
-
-/* Always show checkbox on touch devices */
+/* Always show on touch devices */
 @media (hover: none) {
   .checkbox {
+    opacity: 0.6;
+  }
+  .folderProgress {
     opacity: 1;
   }
 }
 
+/* ── Children slide-in ───────────────────────────────────────── */
 .children {
-  animation: slideDown 0.2s ease-out;
+  animation: slideDown 0.15s ease-out;
 }
 
 @keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-3px); }
+  to   { opacity: 1; transform: translateY(0); }
 }

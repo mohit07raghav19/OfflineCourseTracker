@@ -1,11 +1,17 @@
 # OfflineCourseTracker 🚀
 
-![Version](https://img.shields.io/badge/version-1.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)
 ![Privacy](https://img.shields.io/badge/privacy-focused-green.svg)
 ![Offline](https://img.shields.io/badge/offline--first-yes-orange.svg)
 ![AI-Assisted](https://img.shields.io/badge/ai--assisted-yes-blueviolet.svg)
 
 **Local Course Progress Dashboard** – A fully offline, privacy-focused web application for tracking your learning journey through downloaded courses.
+
+## 🎬 Demo Walkthrough
+
+Check out the screen recording showing the local course load, multi-format media rendering (Video, PDF, HTML, Markdown, Plain Text), and scroll-based automatic progress tracking:
+
+https://github.com/user-attachments/assets/bf43eb6c-056f-497d-95e6-0f32812aa2df
 
 ---
 
